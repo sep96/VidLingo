@@ -1,15 +1,16 @@
-# VidLingo: Video Player with Subtitles, Word Translation, and Reminders
+# VidLingo: Cross-Platform Video Player with Subtitles, Word Translation, and Reminders
 
-**VidLingo** is an innovative video player designed for language learners and movie enthusiasts. With **VidLingo**, you can watch videos with subtitles, click on any word for instant translation, save translations to build your vocabulary, and set reminders to review words later. It's the perfect tool for turning your video-watching experience into a language learning opportunity.
+**VidLingo** is a cross-platform video player built for language learners and movie enthusiasts. Available on **Windows, macOS, and Linux**, **VidLingo** allows users to watch videos with subtitles, click on words for instant translation, and set reminders to review translations later. It's the perfect tool for turning your video-watching experience into a language learning opportunity.
 
 ## Features
 
-- **Video Playback**: Play, pause, and stop videos using the WPF `MediaElement`.
-- **Subtitle Support**: Load and display subtitles in sync with videos (.srt, .vtt supported).
-- **Word Translation**: Click any word in the subtitles to get its translation using an external API (e.g., Google Translate).
-- **Translation Storage**: Save translated words for future review using SQLite or file-based storage.
-- **Reminders**: Set reminders to revisit saved words and boost your language learning over time.
-  
+- **Cross-Platform Support**: Runs on Windows, macOS, and Linux using .NET 6+ and Avalonia or MAUI.
+- **Video Playback**: Play, pause, and stop videos with ease.
+- **Subtitle Support**: Load subtitles in `.srt` or `.vtt` format and display them in sync with your video.
+- **Word Translation**: Click on any word in the subtitles for an instant translation using an external API.
+- **Translation Storage**: Save translated words for future reference using SQLite or file-based storage.
+- **Reminders**: Set reminders to review tricky words and improve your vocabulary retention over time.
+
 ## Screenshots
 
 ![Video Player Interface](screenshots/player.png)
@@ -22,7 +23,7 @@
 - .NET 6.0 or later
 - Visual Studio 2022 (or any other IDE supporting .NET development)
 - An API key for a translation service (e.g., Google Translate or DeepL)
-- SQLite (or any other preferred storage method)
+- SQLite (or another preferred storage method)
 
 ### Installation
 
