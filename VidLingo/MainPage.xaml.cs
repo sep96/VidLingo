@@ -26,25 +26,23 @@ namespace VidLingo
             {
                 RowDefinitions =
                 {
+                    new RowDefinition { Height = new GridLength(50) },
                     new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
                 }
             };
 
-            // Using WebView to display video
+            var chooseFileButton = new Button
+            {
+                Text = "Choose Video File"
+            };
+            chooseFileButton.Clicked += OnChooseFileClicked;
+
             videoPlayer = new WebView
             {
                 Source = new HtmlWebViewSource
                 {
-                    Html = @"
-                    <html>
-                        <body style='margin:0;padding:0;'>
-                            <video width='100%' height='100%' controls autoplay>
-                                <source src='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' type='video/mp4'>
-                                Your browser does not support the video tag.
-                            </video>
-                        </body>
-                    </html>"
+                    Html = "<html><body><p>Please choose a video file.</p></body></html>"
                 }
             };
 
@@ -59,10 +57,48 @@ namespace VidLingo
             tapGestureRecognizer.Tapped += OnSubtitleTapped;
             subtitleLabel.GestureRecognizers.Add(tapGestureRecognizer);
 
-            grid.Add(videoPlayer, 0, 0);
-            grid.Add(subtitleLabel, 0, 1);
+            grid.Add(chooseFileButton, 0, 0);
+            grid.Add(videoPlayer, 0, 1);
+            grid.Add(subtitleLabel, 0, 2);
 
             Content = grid;
+        }
+
+        private async void OnChooseFileClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var result = await FilePicker.PickAsync(new PickOptions
+                {
+                    FileTypes = FilePickerFileType.Videos,
+                    PickerTitle = "Pick a video file"
+                });
+
+                if (result != null)
+                {
+                    var videoPath = result.FullPath;
+                    UpdateVideoSource(videoPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+            }
+        }
+
+        private void UpdateVideoSource(string videoPath)
+        {
+            var html = $@"
+            <html>
+                <body style='margin:0;padding:0;'>
+                    <video width='100%' height='100%' controls autoplay>
+                        <source src='{videoPath}' type='video/mp4'>
+                        Your browser does not support the video tag.
+                    </video>
+                </body>
+            </html>";
+
+            videoPlayer.Source = new HtmlWebViewSource { Html = html };
 
             // Simulating subtitle changes
             Device.StartTimer(TimeSpan.FromSeconds(5), () =>
