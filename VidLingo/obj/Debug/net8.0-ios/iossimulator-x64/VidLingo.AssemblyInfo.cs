@@ -14,10 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VidLingo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+5f9c4cb6526707e5b154d6659559e0e34c4e4879")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+0c0f90f491364a490fd3729c18b293c0465e3f36")]
 [assembly: System.Reflection.AssemblyProductAttribute("VidLingo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VidLingo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Runtime.Versioning.RequiresPreviewFeaturesAttribute()]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("iOS17.2")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("iOS11.0")]
 

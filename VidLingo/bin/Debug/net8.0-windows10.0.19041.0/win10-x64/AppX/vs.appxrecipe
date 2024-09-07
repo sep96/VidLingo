@@ -29,7 +29,7 @@
     <AppXManifest Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-09-07T12:28:25.495</Modified>
+      <Modified>2024-09-07T12:31:13.763</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -43,11 +43,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\VidLingo.dll">
       <PackagePath>VidLingo.dll</PackagePath>
-      <Modified>2024-09-07T12:28:23.970</Modified>
+      <Modified>2024-09-07T12:31:13.262</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>VidLingo.exe</PackagePath>
-      <Modified>2024-09-07T12:28:23.999</Modified>
+      <Modified>2024-09-07T12:31:13.272</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\Resources\Raw\AboutAssets.txt">
       <PackagePath>AboutAssets.txt</PackagePath>

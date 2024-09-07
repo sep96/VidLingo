@@ -1,15 +1,17 @@
 ﻿using Microsoft.Maui.Controls;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
-using Newtonsoft.Json.Linq;
+using Microsoft.Maui.Storage;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.MediaElement; // Add this for MediaElement support
+
 
 namespace VidLingo
 {
     public partial class MainPage : ContentPage
     {
-        private WebView videoPlayer;
+        private MediaElement mediaElement;
         private Label subtitleLabel;
         private string currentSubtitle = "";
         private string targetLanguage = "es"; // Default to Spanish, can be changed
@@ -38,12 +40,10 @@ namespace VidLingo
             };
             chooseFileButton.Clicked += OnChooseFileClicked;
 
-            videoPlayer = new WebView
+            mediaElement = new MediaElement
             {
-                Source = new HtmlWebViewSource
-                {
-                    Html = "<html><body><p>Please choose a video file.</p></body></html>"
-                }
+                ShouldAutoPlay = true,
+                ShouldShowPlaybackControls = true
             };
 
             subtitleLabel = new Label
@@ -58,10 +58,12 @@ namespace VidLingo
             subtitleLabel.GestureRecognizers.Add(tapGestureRecognizer);
 
             grid.Add(chooseFileButton, 0, 0);
-            grid.Add(videoPlayer, 0, 1);
+            grid.Add(mediaElement, 0, 1);
             grid.Add(subtitleLabel, 0, 2);
 
             Content = grid;
+
+            mediaElement.PositionChanged += OnPositionChanged;
         }
 
         private async void OnChooseFileClicked(object sender, EventArgs e)
@@ -76,8 +78,8 @@ namespace VidLingo
 
                 if (result != null)
                 {
-                    var videoPath = result.FullPath;
-                    UpdateVideoSource(videoPath);
+                    mediaElement.Source = MediaSource.FromFile(result.FullPath);
+                    await mediaElement.Play();
                 }
             }
             catch (Exception ex)
@@ -86,26 +88,17 @@ namespace VidLingo
             }
         }
 
-        private void UpdateVideoSource(string videoPath)
+        private void OnPositionChanged(object sender, MediaPositionChangedEventArgs e)
         {
-            var html = $@"
-            <html>
-                <body style='margin:0;padding:0;'>
-                    <video width='100%' height='100%' controls autoplay>
-                        <source src='{videoPath}' type='video/mp4'>
-                        Your browser does not support the video tag.
-                    </video>
-                </body>
-            </html>";
-
-            videoPlayer.Source = new HtmlWebViewSource { Html = html };
-
-            // Simulating subtitle changes
-            Device.StartTimer(TimeSpan.FromSeconds(5), () =>
+            // This is where you would typically update subtitles based on video time
+            // For demonstration, we'll just update every 5 seconds
+            if ((int)e.Position.TotalSeconds % 5 == 0)
             {
-                OnSubtitleChanged(this, "This is a sample subtitle");
-                return true;
-            });
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    OnSubtitleChanged(this, $"Sample subtitle at {(int)e.Position.TotalSeconds} seconds");
+                });
+            }
         }
 
         private void OnSubtitleChanged(object sender, string newSubtitle)
