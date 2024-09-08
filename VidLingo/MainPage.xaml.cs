@@ -3,8 +3,7 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Storage;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.MediaElement; // Add this for MediaElement support
+using Microsoft.Maui.Controls; 
 
 
 namespace VidLingo
@@ -21,17 +20,16 @@ namespace VidLingo
             InitializeComponent();
             SetupUI();
         }
-
         private void SetupUI()
         {
             var grid = new Grid
             {
                 RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(50) },
-                    new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-                }
+        {
+            new RowDefinition { Height = new GridLength(50) },
+            new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
+            new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+        }
             };
 
             var chooseFileButton = new Button
@@ -63,9 +61,24 @@ namespace VidLingo
 
             Content = grid;
 
+            // Subscribe to the PositionChanged event
             mediaElement.PositionChanged += OnPositionChanged;
         }
 
+        private void OnPositionChanged(object sender, EventArgs e)
+        {
+            // Directly access the Position property from the MediaElement
+            var position = mediaElement.Position;
+
+            // For demonstration, we'll just update every 5 seconds
+            if ((int)position.TotalSeconds % 5 == 0)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    OnSubtitleChanged(this, $"Sample subtitle at {(int)position.TotalSeconds} seconds");
+                });
+            }
+        }
         private async void OnChooseFileClicked(object sender, EventArgs e)
         {
             try
@@ -79,7 +92,7 @@ namespace VidLingo
                 if (result != null)
                 {
                     mediaElement.Source = MediaSource.FromFile(result.FullPath);
-                    await mediaElement.Play();
+                    mediaElement.Play(); // Remove await and just call the method directly
                 }
             }
             catch (Exception ex)
@@ -88,18 +101,7 @@ namespace VidLingo
             }
         }
 
-        private void OnPositionChanged(object sender, MediaPositionChangedEventArgs e)
-        {
-            // This is where you would typically update subtitles based on video time
-            // For demonstration, we'll just update every 5 seconds
-            if ((int)e.Position.TotalSeconds % 5 == 0)
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    OnSubtitleChanged(this, $"Sample subtitle at {(int)e.Position.TotalSeconds} seconds");
-                });
-            }
-        }
+
 
         private void OnSubtitleChanged(object sender, string newSubtitle)
         {

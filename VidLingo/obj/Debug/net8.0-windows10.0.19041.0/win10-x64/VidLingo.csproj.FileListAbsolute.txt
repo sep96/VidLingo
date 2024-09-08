@@ -180,3 +180,8 @@ C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\obj\Debug\net8.0-windows1
 C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\qualifiers.txt.intermediate
 C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\MultipleQualifiersPerDimensionFound.txt
 C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\ProjectArchitectures.txt
+C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\CommunityToolkit.Maui.MediaElement.dll
+C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\LibVLCSharp.dll
+C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\SharpDX.dll
+C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\SharpDX.Direct3D11.dll
+C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\SharpDX.DXGI.dll
