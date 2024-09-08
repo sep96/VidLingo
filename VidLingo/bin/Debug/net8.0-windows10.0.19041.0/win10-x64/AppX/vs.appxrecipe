@@ -29,25 +29,25 @@
     <AppXManifest Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-09-08T05:34:22.006</Modified>
+      <Modified>2024-09-08T08:30:29.890</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2024-09-08T05:22:13.330</Modified>
+      <Modified>2024-09-08T08:20:45.055</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\VidLingo.runtimeconfig.json">
       <PackagePath>VidLingo.runtimeconfig.json</PackagePath>
-      <Modified>2024-09-08T05:22:12.841</Modified>
+      <Modified>2024-09-08T08:15:22.216</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\VidLingo.dll">
       <PackagePath>VidLingo.dll</PackagePath>
-      <Modified>2024-09-08T05:34:21.520</Modified>
+      <Modified>2024-09-08T08:30:29.349</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>VidLingo.exe</PackagePath>
-      <Modified>2024-09-08T05:34:21.526</Modified>
+      <Modified>2024-09-08T08:30:29.358</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\Resources\Raw\AboutAssets.txt">
       <PackagePath>AboutAssets.txt</PackagePath>
@@ -287,7 +287,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\source\repos\VidLingo\VidLingo\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\VidLingo.deps.json">
       <PackagePath>VidLingo.deps.json</PackagePath>
-      <Modified>2024-09-08T05:22:12.539</Modified>
+      <Modified>2024-09-08T08:20:44.731</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\sepehr.ashtari\.nuget\packages\microsoft.windows.sdk.net.ref\10.0.19041.31\lib\net6.0\Microsoft.Windows.SDK.NET.dll">
       <PackagePath>Microsoft.Windows.SDK.NET.dll</PackagePath>

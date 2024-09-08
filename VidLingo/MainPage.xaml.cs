@@ -29,23 +29,35 @@ namespace VidLingo
             var grid = new Grid
             {
                 RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(50) },
-                    new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-                }
+        {
+            new RowDefinition { Height = new GridLength(50) },
+            new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
+            new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+        }
             };
 
-            var chooseFileButton = new Button
+            var chooseVideoButton = new Button
             {
-                Text = "Choose Video File"
+                Text = "Choose Video File",
+                WidthRequest = 150, // Set the width to a smaller size
+                HeightRequest = 40 // Set the height to a smaller size
             };
-            chooseFileButton.Clicked += OnChooseFileClicked;
+            chooseVideoButton.Clicked += OnChooseVideoFileClicked;
+
+            var chooseSubtitleButton = new Button
+            {
+                Text = "Choose Subtitle File",
+                WidthRequest = 150, // Set the width to a smaller size
+                HeightRequest = 40 // Set the height to a smaller size
+            };
+            chooseSubtitleButton.Clicked += OnChooseSubtitleFileClicked;
 
             mediaElement = new MediaElement
             {
                 ShouldAutoPlay = true,
-                ShouldShowPlaybackControls = true
+                ShouldShowPlaybackControls = true,
+                HorizontalOptions = LayoutOptions.FillAndExpand, // Make the width fill available space
+                Aspect = Aspect.AspectFill // Maintain aspect ratio
             };
 
             subtitleLabel = new Label
@@ -55,14 +67,14 @@ namespace VidLingo
                 TextColor = Colors.Black
             };
 
-
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.Tapped += OnSubtitleTapped;
             subtitleLabel.GestureRecognizers.Add(tapGestureRecognizer);
 
-            grid.Add(chooseFileButton, 0, 0);
-            grid.Add(mediaElement, 0, 1);
-            grid.Add(subtitleLabel, 0, 2);
+            grid.Add(chooseVideoButton, 0, 0);
+            grid.Add(chooseSubtitleButton, 1, 0);
+            grid.Add(mediaElement, 0, 2);
+            grid.Add(subtitleLabel, 0, 3);
 
             Content = grid;
 
@@ -70,7 +82,8 @@ namespace VidLingo
             mediaElement.PositionChanged += OnPositionChanged;
         }
 
-        private async void OnChooseFileClicked(object sender, EventArgs e)
+
+        private async void OnChooseVideoFileClicked(object sender, EventArgs e)
         {
             try
             {
@@ -84,9 +97,6 @@ namespace VidLingo
                 {
                     mediaElement.Source = MediaSource.FromFile(result.FullPath);
                     mediaElement.Play();
-
-                    // Prompt user to select a subtitle file
-                    await LoadSubtitlesAsync();
                 }
             }
             catch (Exception ex)
@@ -94,18 +104,24 @@ namespace VidLingo
                 await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
             }
         }
+
+        private async void OnChooseSubtitleFileClicked(object sender, EventArgs e)
+        {
+            await LoadSubtitlesAsync();
+        }
+
         private async Task LoadSubtitlesAsync()
         {
             try
             {
                 // Define custom file type for SRT files
                 var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-            { DevicePlatform.iOS, new[] { "public.text" } }, // For iOS, use public.text to represent text files
-            { DevicePlatform.Android, new[] { "text/plain" } }, // For Android, use text/plain MIME type
-            { DevicePlatform.WinUI, new[] { ".srt" } }, // For Windows, use file extension
-            { DevicePlatform.MacCatalyst, new[] { "public.text" } } // For MacCatalyst
-        });
+                {
+                    { DevicePlatform.iOS, new[] { "public.text" } }, // For iOS, use public.text to represent text files
+                    { DevicePlatform.Android, new[] { "text/plain" } }, // For Android, use text/plain MIME type
+                    { DevicePlatform.WinUI, new[] { ".srt" } }, // For Windows, use file extension
+                    { DevicePlatform.MacCatalyst, new[] { "public.text" } } // For MacCatalyst
+                });
 
                 var result = await FilePicker.PickAsync(new PickOptions
                 {
@@ -124,7 +140,6 @@ namespace VidLingo
                 await DisplayAlert("Error", $"Failed to load subtitles: {ex.Message}", "OK");
             }
         }
-
 
         private void OnPositionChanged(object sender, EventArgs e)
         {
@@ -219,13 +234,13 @@ namespace VidLingo
             // Set the formatted text to the label
             subtitleLabel.FormattedText = formattedString;
         }
+
         private async void OnWordTapped(string word)
         {
             // Handle the tapped word, e.g., show a translation dialog
             string translatedText = await TranslateText(word, targetLanguage);
             await DisplayAlert("Word Selected", $"You selected: {word}\nTranslation: {translatedText}", "OK");
         }
-
 
         private async void OnSubtitleTapped(object sender, EventArgs e)
         {
