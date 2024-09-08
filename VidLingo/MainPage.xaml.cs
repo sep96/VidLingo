@@ -1,10 +1,12 @@
 ﻿using Microsoft.Maui.Controls;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Storage;
-using Microsoft.Maui.Controls; 
-
+using Microsoft.Maui.Controls;
 
 namespace VidLingo
 {
@@ -14,22 +16,24 @@ namespace VidLingo
         private Label subtitleLabel;
         private string currentSubtitle = "";
         private string targetLanguage = "es"; // Default to Spanish, can be changed
+        private List<Subtitle> subtitles = new List<Subtitle>(); // List to hold subtitles
 
         public MainPage()
         {
             InitializeComponent();
             SetupUI();
         }
+
         private void SetupUI()
         {
             var grid = new Grid
             {
                 RowDefinitions =
-        {
-            new RowDefinition { Height = new GridLength(50) },
-            new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
-            new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-        }
+                {
+                    new RowDefinition { Height = new GridLength(50) },
+                    new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                }
             };
 
             var chooseFileButton = new Button
@@ -46,10 +50,11 @@ namespace VidLingo
 
             subtitleLabel = new Label
             {
-                Text = "Subtitles will appear here",
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                TextColor = Colors.Black
             };
+
 
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.Tapped += OnSubtitleTapped;
@@ -65,20 +70,6 @@ namespace VidLingo
             mediaElement.PositionChanged += OnPositionChanged;
         }
 
-        private void OnPositionChanged(object sender, EventArgs e)
-        {
-            // Directly access the Position property from the MediaElement
-            var position = mediaElement.Position;
-
-            // For demonstration, we'll just update every 5 seconds
-            if ((int)position.TotalSeconds % 5 == 0)
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    OnSubtitleChanged(this, $"Sample subtitle at {(int)position.TotalSeconds} seconds");
-                });
-            }
-        }
         private async void OnChooseFileClicked(object sender, EventArgs e)
         {
             try
@@ -92,7 +83,10 @@ namespace VidLingo
                 if (result != null)
                 {
                     mediaElement.Source = MediaSource.FromFile(result.FullPath);
-                    mediaElement.Play(); // Remove await and just call the method directly
+                    mediaElement.Play();
+
+                    // Prompt user to select a subtitle file
+                    await LoadSubtitlesAsync();
                 }
             }
             catch (Exception ex)
@@ -100,14 +94,138 @@ namespace VidLingo
                 await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
             }
         }
+        private async Task LoadSubtitlesAsync()
+        {
+            try
+            {
+                // Define custom file type for SRT files
+                var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+        {
+            { DevicePlatform.iOS, new[] { "public.text" } }, // For iOS, use public.text to represent text files
+            { DevicePlatform.Android, new[] { "text/plain" } }, // For Android, use text/plain MIME type
+            { DevicePlatform.WinUI, new[] { ".srt" } }, // For Windows, use file extension
+            { DevicePlatform.MacCatalyst, new[] { "public.text" } } // For MacCatalyst
+        });
+
+                var result = await FilePicker.PickAsync(new PickOptions
+                {
+                    FileTypes = customFileType,
+                    PickerTitle = "Pick a subtitle file (SRT)"
+                });
+
+                if (result != null)
+                {
+                    string srtContent = await File.ReadAllTextAsync(result.FullPath);
+                    subtitles = ParseSrt(srtContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Failed to load subtitles: {ex.Message}", "OK");
+            }
+        }
 
 
+        private void OnPositionChanged(object sender, EventArgs e)
+        {
+            var position = mediaElement.Position;
+
+            // Find the subtitle that matches the current video position
+            var currentSub = FindSubtitleForPosition(position);
+
+            if (currentSub != null && currentSub.Text != currentSubtitle)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    OnSubtitleChanged(this, currentSub.Text);
+                });
+            }
+        }
+
+        private Subtitle FindSubtitleForPosition(TimeSpan position)
+        {
+            foreach (var subtitle in subtitles)
+            {
+                if (position >= subtitle.StartTime && position <= subtitle.EndTime)
+                {
+                    return subtitle;
+                }
+            }
+            return null;
+        }
+
+        private List<Subtitle> ParseSrt(string srtContent)
+        {
+            var subtitleList = new List<Subtitle>();
+            var lines = srtContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+            Subtitle currentSubtitle = null;
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    if (currentSubtitle != null)
+                    {
+                        subtitleList.Add(currentSubtitle);
+                        currentSubtitle = null;
+                    }
+                }
+                else if (currentSubtitle == null)
+                {
+                    currentSubtitle = new Subtitle();
+                }
+                else if (currentSubtitle.StartTime == TimeSpan.Zero)
+                {
+                    var times = line.Split(" --> ");
+                    if (times.Length == 2)
+                    {
+                        currentSubtitle.StartTime = TimeSpan.ParseExact(times[0], "hh\\:mm\\:ss\\,fff", CultureInfo.InvariantCulture);
+                        currentSubtitle.EndTime = TimeSpan.ParseExact(times[1], "hh\\:mm\\:ss\\,fff", CultureInfo.InvariantCulture);
+                    }
+                }
+                else
+                {
+                    currentSubtitle.Text += line + " ";
+                }
+            }
+            return subtitleList;
+        }
 
         private void OnSubtitleChanged(object sender, string newSubtitle)
         {
             currentSubtitle = newSubtitle;
-            subtitleLabel.Text = currentSubtitle;
+
+            // Clear existing content
+            var formattedString = new FormattedString();
+
+            // Split the subtitle into words
+            var words = newSubtitle.Split(' ');
+
+            foreach (var word in words)
+            {
+                var span = new Span
+                {
+                    Text = word + " ", // Add a space after each word
+                    TextColor = Colors.Black // Set the desired text color
+                };
+
+                var tapGestureRecognizer = new TapGestureRecognizer();
+                tapGestureRecognizer.Tapped += (s, e) => OnWordTapped(word);
+                span.GestureRecognizers.Add(tapGestureRecognizer);
+
+                formattedString.Spans.Add(span);
+            }
+
+            // Set the formatted text to the label
+            subtitleLabel.FormattedText = formattedString;
         }
+        private async void OnWordTapped(string word)
+        {
+            // Handle the tapped word, e.g., show a translation dialog
+            string translatedText = await TranslateText(word, targetLanguage);
+            await DisplayAlert("Word Selected", $"You selected: {word}\nTranslation: {translatedText}", "OK");
+        }
+
 
         private async void OnSubtitleTapped(object sender, EventArgs e)
         {
@@ -121,10 +239,15 @@ namespace VidLingo
         private async Task<string> TranslateText(string text, string targetLanguage)
         {
             // Note: Replace with your preferred translation API
-            // This is a placeholder and won't actually translate anything
-            await Task.Delay(1000); // Simulate network delay
             return $"Translated: {text} (to {targetLanguage})";
         }
-    }
 
+        // Subtitle class to store subtitle details
+        public class Subtitle
+        {
+            public TimeSpan StartTime { get; set; }
+            public TimeSpan EndTime { get; set; }
+            public string Text { get; set; } = string.Empty;
+        }
+    }
 }
