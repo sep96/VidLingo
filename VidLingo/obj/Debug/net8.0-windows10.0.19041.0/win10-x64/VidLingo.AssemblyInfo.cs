@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VidLingo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+a310db2c342b885029df4645be37db445b6a5aee")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+adb11830ab558f0e7b3b797d9203591dbe36bb03")]
 [assembly: System.Reflection.AssemblyProductAttribute("VidLingo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VidLingo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

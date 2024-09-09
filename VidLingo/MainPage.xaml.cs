@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Storage;
 using Microsoft.Maui.Controls;
+using VidLingo.Classes;
 
 namespace VidLingo
 {
@@ -17,7 +18,7 @@ namespace VidLingo
         private Label secondarySubtitleLabel; // Additional label for secondary subtitles
 
         private string currentSubtitle = "";
-        private string targetLanguage = "es"; // Default to Spanish, can be changed
+        private string targetLanguage = "fa"; // Default to Spanish, can be changed
         private List<Subtitle> primarySubtitles = new List<Subtitle>(); // List for the primary subtitles
         private List<Subtitle> secondarySubtitles = new List<Subtitle>(); // List for the secondary subtitles
 
@@ -33,11 +34,11 @@ namespace VidLingo
             var grid = new Grid
             {
                 RowDefinitions =
-        {
-            new RowDefinition { Height = new GridLength(50) },
-            new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
-            new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-        }
+                {
+                    new RowDefinition { Height = new GridLength(50) },
+                    new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                }
             };
 
             var chooseVideoButton = new Button
@@ -265,12 +266,14 @@ namespace VidLingo
 
             string translatedText = await TranslateText(currentSubtitle, targetLanguage);
             await DisplayAlert("Translation", translatedText, "OK");
-        }
+        }            
 
         private async Task<string> TranslateText(string text, string targetLanguage)
         {
+            string translatedText = await Translator.TranslateTextAsync(text, "en", targetLanguage);
+
             // Note: Replace with your preferred translation API
-            return $"Translated: {text} (to {targetLanguage})";
+            return $"Translated: {text} (to {translatedText})";
         }
 
         // Subtitle class to store subtitle details
